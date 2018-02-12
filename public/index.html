@@ -3,6 +3,36 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <title>Random Chat</title>
+    <style type="text/css">
+            .sender{
+            background-color: #0080ff;
+            text-align: right;
+            float: right;
+            width: 100%;
+            box-shadow: 1px 2px #949494;
+            color: white;
+            }
+
+            .receiver{
+            background-color: #ffffff;
+            text-align: left;
+            float: left; 
+            box-shadow: 1px 2px #949494;
+            width: 100%;   
+            }            
+
+            ul{
+                list-style-type: none;overflow: auto;height: 325px;
+            }
+
+            li {
+            padding: 2px;
+            border-radius: 5px;
+            margin-right: 25px;
+            border: 1px solid gray;
+            margin-bottom: 2px;
+            }
+    </style>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="/socket.io/socket.io.js"></script>
@@ -18,39 +48,137 @@
             
             socket.on('completeMatch', function(data){
                 console.log('completeMatch!',data);
-                
+                $('.lobby').hide();
+                $('.wait').hide();
+                $('.chat').show();
             });
 
             socket.on('receiveMessage', function(data){
                 console.log(data);
-                
+                if(data.user == userName){
+                   $('.chatResult').append('<li class="sender">' + data.message + '<b>:'+ data.user + '  </b><span style="border-radius: 50%;border: 1px solid;padding: 5px;margin:1px;" class="glyphicon glyphicon-user"></span></li> ');
+                }
+                else{
+                   $('.chatResult').append('<li class="receiver"><span style="border-radius: 50%;border: 1px solid;padding: 5px;margin:1px;" class="glyphicon glyphicon-user"></span><b>' + data.user+ ': </b>' + data.message + '</li>');    
                 }
             });
 
             socket.on('disconnect', function(data){
-                
+                console.log('disconnect');
+                location.reload();
             });
 
            requestRandomChat=()=>{
-               
+                userName = $('#name').val();
+                if(userName == ""){
+                    alert("Please enter your Nickname");
+                }
+                else{
+                $('.lobby').hide();
+                $('.wait').show();
+                socket.emit('requestRandomChat');
+                }
             };
             
 
             // 13 keycode is for enter
             $('#inputMessage').keyup(function(e){
-               
+                if (e.keyCode == 13){
+                    validate();
+                }
             });
 
         });
         
-        
+        validate=()=>{
+        	let message = getMessage();
+        	if(isSlashCommand(message))
+        	{
+        		validateSlashCommand(message)
+        	}
+        	else
+        	{
+        		send(message,0);
+        	}
+        }
+
+        isSlashCommand=(message)=> 	message[0] == '/' ? true : false//slash commands;
+
+        validateSlashCommand=(message)=>{
+        	let command = message.split(' ');
+        	 if(command[0] == '/delay'){
+        	 	let newMessage = message.replace(command[0]+' '+command[1]+' ','');
+        	 	send(newMessage,command[1]);
+        	 }
+        	 else if(command[0] == '/hop')
+        	 {
+        	 	$('.lobby').hide();
+                $("ul").empty();
+                $('.wait').show();
+                $('.chat').hide();
+                socket.emit('disconnect');
+                socket.emit('requestRandomChat');
+        	 }
+             else{
+                send(message,0);
+             }
+
+		} 
+
+         send=(message,timeousend(message,0);tTime)=>{
+            if (getMessage().length < 1){
+                alert('Please enter your content.');
+                return;
+            }
+            setTimeout(()=>{
+            	socket.emit('sendMessage', {message:message, user:userName});	
+            },timeoutTime);
+            
+            $('#inputMessage').val('');
+        }
     </script>
 </head>
 <body style="background-color: black">
 <div class="jumbotron" style="margin: 100px; text-align: center; padding: 100px;">
 
-    <!--html BODY-->
-    
+    <!--Welcome class-->
+    <div class="lobby"> 
+      <h1 class="display-3">Welcome to RandomChat</h1>
+      <p class="lead">This page allows you to chat randomly with anyone available in chat room</p>
+      <hr class="my-4">
+      <p>To begin with, please specify a nickname you prefer to be used during chat</p>
+      <input style="width:50%;float: none;margin: 0 auto;" class="form-control" placeholder="Nickname" type="text" name="name" id="name"><br />
+      <p class="lead">
+        <button onclick="requestRandomChat()" class="btn btn-primary">Join Random Chat</button>
+      </p>
+    </div>
+
+    <!--Wait class-->
+    <div class="wait" style="display: none;">
+        <p class="lead">Please Wait...</p>
+        <hr class="my-4">
+        <p>You have been assigned to a queue, please wait for someone to join the chat, you are in line to talk to the very next person who joins the site</p>
+        <p class="lead">
+         <button onclick="location.reload();" class="btn btn-primary">Exit</button>
+        </p>
+    </div>
+
+
+    <!--Chat Window-->
+    <div class="chat" style="display: none;border: 24px solid grey;">
+        <h4>Randomchat</h4>
+        <hr />
+        <div class="chatbox">
+            <ul class="chatResult">
+            </ul>
+        </div>
+        <div class="input-group">
+            <input type="text" placeholder="Message" id="inputMessage" class="form-control">
+            <span class="input-group-btn">
+             <button class="btn btn-default" onclick="validate()" type="button">Send</button>
+            </span>
+        </div>
+    </div>
     
 
 
