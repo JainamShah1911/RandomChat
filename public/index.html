@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Random Chat</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+        var socket = io.connect('http://<%=host%>');
+    	var userName = null;
+    	var getMessage = ()=> $('#inputMessage').val();
+
+        $(document).ready(function(){
+            socket.on('connected', function(){
+                console.log('connected');
+            });
+            
+            socket.on('completeMatch', function(data){
+                console.log('completeMatch!',data);
+                
+            });
+
+            socket.on('receiveMessage', function(data){
+                console.log(data);
+                
+                }
+            });
+
+            socket.on('disconnect', function(data){
+                
+            });
+
+           requestRandomChat=()=>{
+               
+            };
+            
+
+            // 13 keycode is for enter
+            $('#inputMessage').keyup(function(e){
+               
+            });
+
+        });
+        
+        
+    </script>
+</head>
+<body style="background-color: black">
+<div class="jumbotron" style="margin: 100px; text-align: center; padding: 100px;">
+
+    <!--html BODY-->
+    
+    
+
+
+</div>
+</body>
+</html>
