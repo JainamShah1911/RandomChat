@@ -56,10 +56,10 @@
             socket.on('receiveMessage', function(data){
                 console.log(data);
                 if(data.user == userName){
-                   $('.chatResult').append('<li class="sender">' + data.message + '<b>:'+ data.user + '  </b><span style="border-radius: 50%;border: 1px solid;padding: 5px;margin:1px;" class="glyphicon glyphicon-user"></span></li> ');
+                   $('.chatResult').append('<li class="sender">' + data.message + '<b> : '+ data.user + '  </b><span style="border-radius: 50%;border: 1px solid;padding: 5px;margin:1px;" class="glyphicon glyphicon-user"></span></li> ');
                 }
                 else{
-                   $('.chatResult').append('<li class="receiver"><span style="border-radius: 50%;border: 1px solid;padding: 5px;margin:1px;" class="glyphicon glyphicon-user"></span><b>' + data.user+ ': </b>' + data.message + '</li>');    
+                   $('.chatResult').append('<li class="receiver"><span style="border-radius: 50%;border: 1px solid;padding: 5px;margin:1px;" class="glyphicon glyphicon-user"></span><b>' + data.user+ ' : </b>' + data.message + '</li>');    
                 }
             });
 
@@ -125,7 +125,7 @@
 
 		} 
 
-         send=(message,timeousend(message,0);tTime)=>{
+         send=(message,timeoutTime)=>{
             if (getMessage().length < 1){
                 alert('Please enter your content.');
                 return;
