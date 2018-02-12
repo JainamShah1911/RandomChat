@@ -7,7 +7,11 @@ Furthermore implemeneted a couple basic commands - similar to the slash commands
 • If a user types /delay 1000 hello, then the message hello should be relayed to their chat partner with a delay of 1000 ms.
 • If a user types /hop then attempt to repair with another user or wait until another is available.
 
-# How to run
+## Prerequisite
+1. Node
+2. Socket.io
+
+## How to run
 
 step 1 : clone this repo
 
@@ -21,4 +25,4 @@ step 3 : run node server.js
 node server.js
 ```
 
-step 4 : open localhost:3000 
+step 4 : open localhost:9000 
